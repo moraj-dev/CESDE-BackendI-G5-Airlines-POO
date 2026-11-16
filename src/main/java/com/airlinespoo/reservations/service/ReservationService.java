@@ -2,6 +2,7 @@ package com.airlinespoo.reservations.service;
 
 import com.airlinespoo.core.exception.NotFoundException;
 import com.airlinespoo.reservations.model.Reservation;
+import com.airlinespoo.reservations.model.ReservationDetail;
 import com.airlinespoo.reservations.repository.ReservationRepository;
 
 import java.util.Optional;
@@ -19,5 +20,11 @@ public class ReservationService {
             throw new NotFoundException("reservación", id);
         }
         return found.get();
+    }
+
+    public void addPassenger(int reservationId, ReservationDetail detail){
+       Reservation reservation = getById(reservationId);
+       reservation.addDetail(detail);
+
     }
 }
