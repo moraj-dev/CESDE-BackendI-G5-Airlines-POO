@@ -27,4 +27,9 @@ public class ReservationService {
        reservation.addDetail(detail);
 
     }
+
+    public void removePassenger(int reservationId, ReservationDetail detail){
+        Reservation reservation = getById(reservationId);
+        reservation.removeDetail(detail);
+    }
 }
