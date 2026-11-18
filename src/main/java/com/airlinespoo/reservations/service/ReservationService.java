@@ -49,4 +49,14 @@ public class ReservationService {
         Reservation reservation = getById(reservationId);
         return reservation.getDetails();
     }
+
+    public List<Reservation> listReservations(){
+        return repository.findAll();
+    }
+
+    public void cancelReservation(int reservationId){
+        if (!repository.deleteById(reservationId)){
+            throw new NotFoundException("reservación", reservationId);
+        }
+    }
 }
