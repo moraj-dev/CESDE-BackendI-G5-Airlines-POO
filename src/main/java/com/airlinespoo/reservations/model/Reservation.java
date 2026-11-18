@@ -75,4 +75,14 @@ public class Reservation implements Identifiable<Integer> {
         }
         details.remove(detail);
     }
+
+    public void changeSeat(ReservationDetail detail, Seat newSeat) {
+        for (ReservationDetail existing : details) {
+            if (!existing.equals(detail) && existing.getSeat().equals(newSeat)) {
+                throw new ValidationException("La silla ya está ocupada.");
+            }
+        }
+
+        detail.setSeat(newSeat);
+    }
 }
