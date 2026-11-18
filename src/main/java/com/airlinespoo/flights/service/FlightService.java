@@ -1,13 +1,12 @@
 package com.airlinespoo.flights.service;
 
+import com.airlinespoo.core.exception.DuplicateException;
 import com.airlinespoo.core.exception.NotFoundException;
 import com.airlinespoo.flights.model.Flight;
 import com.airlinespoo.flights.repository.FlightRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class FlightService {
 
@@ -87,10 +86,43 @@ public class FlightService {
         return flightRepository.existsByAirport(airport);
     }
 
-    public Map<Airline, List<Flight>> listFlightsByAirlineinMonth(int year, int month){
-        if(flight.getDepartureDate().getYear() == year && ){
-
+    public Map<Airline, List<Flight>> listFlightsByAirlineInMonth(int year, int month){
+        //*******************************************************************
+        //Pendiente la validación de Airline para cambiar Hashmap por TreeMap
+        //*******************************************************************
+        //Validación de que el mes sea un número válido
+        if(month<1 || month >12){
+            throw new IllegalArgumentException("El mes debe estar entre 1 y 12");
         }
+        //Validación que el año sea un número válido
+        if(year<1900 || year >2100){
+            throw new IllegalArgumentException("Digita un año entre 1900 y 2100");
+        }
+
+        Map<Airline,List<Flight>> flights=new HashMap<>();
+        List<Flight> flightsAll = flightRepository.findAll();
+        for(Flight flight: flightsAll){
+            if(flight.getDepartureDate().getYear()==year && flight.getDepartureDate().getMonthValue()==month){
+                Airline airline=flight.getAirline();
+                List <Flight> flightsByAirline=flights.computeIfAbsent(airline, k-> new ArrayList<>());
+                flightsByAirline.add(flight);
+
+            }
+        }
+        for(List<Flight> listFlight: flights.values()){
+            Collections.sort(listFlight);
+        }
+        return flights;
+    }
+
+    //Crear un vuelo
+    public Flight createFlight(Flight flight){
+        if(flightRepository.findByFlightName(flight.getFlightName()).isPresent()){
+            throw new DuplicateException("vuelo",flight.getFlightName());
+        }
+        //**********************************************************************************************
+        //Pendiente la validación de existencia de aeropuertos de salida y llegada por el airportService
+        //**********************************************************************************************
     }
 
 }

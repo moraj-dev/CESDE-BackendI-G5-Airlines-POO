@@ -54,18 +54,23 @@ public class Flight implements Comparable<Flight>, Identifiable<Integer> {
     }
 
     //Métodos
+
+    // Unir hora y fecha del vuelo de salida
     public LocalDateTime getDepartureDateTime() {
         return departureDate.atTime(departureTime);
     }
 
+    //Unir hora y fecha del vuelo de llegada
     public LocalDateTime getArrivalDateTime() {
         return arrivalDate.atTime(arrivalTime);
     }
 
+    //Calcular la duración del vuelo
     public Duration getFlightDuration() {
         return Duration.between(getDepartureDateTime(), getArrivalDateTime());
     }
 
+    //Validar si un vuelo ya salió o no
     public boolean hasDeparted(LocalDateTime dateTimeToCompare) {
         return dateTimeToCompare.compareTo(getDepartureDateTime()) >= 0;
     }
@@ -130,7 +135,7 @@ public class Flight implements Comparable<Flight>, Identifiable<Integer> {
 
     //Getters
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

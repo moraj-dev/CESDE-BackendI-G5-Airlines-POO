@@ -14,7 +14,7 @@ public class FlightRepository extends InMemoryRepository<Flight, Integer> {
         return "vuelo";
     }
 
-    //Método para encontrar el vuelo por nombre
+    //Encontrar el vuelo por nombre
     public Optional<Flight> findByFlightName(String flightName){
         List<Flight> listFlights = values();
         for(Flight flight: listFlights){
@@ -25,7 +25,7 @@ public class FlightRepository extends InMemoryRepository<Flight, Integer> {
         return Optional.empty();
     }
 
-    //Método para encontrar los vuelos por aerolínea
+    //Encontrar los vuelos por aerolínea
     public List<Flight> findByAirline(Airline airline){
         List<Flight> flightsByAirline = new ArrayList<>();
         for(Flight flight: values()){
