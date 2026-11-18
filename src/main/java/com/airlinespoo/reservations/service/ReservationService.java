@@ -6,6 +6,7 @@ import com.airlinespoo.reservations.model.ReservationDetail;
 import com.airlinespoo.reservations.model.Seat;
 import com.airlinespoo.reservations.repository.ReservationRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public class ReservationService {
@@ -42,5 +43,10 @@ public class ReservationService {
     public void updatePassenger(int reservationId, ReservationDetail detail, String newName, String newDocument){
         Reservation reservation = getById(reservationId);
         reservation.updatePassenger(detail, newName, newDocument);
+    }
+
+    public List<ReservationDetail> listPassengers(int reservationId){
+        Reservation reservation = getById(reservationId);
+        return reservation.getDetails();
     }
 }
