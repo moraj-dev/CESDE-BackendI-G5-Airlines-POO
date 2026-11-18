@@ -85,4 +85,16 @@ public class Reservation implements Identifiable<Integer> {
 
         detail.setSeat(newSeat);
     }
+
+    public void updatePassenger(ReservationDetail detail, String newName, String newDocument){
+        String cleanDocument = ReservationDetail.validateDocument(newDocument);
+        for (ReservationDetail existing : details) {
+            if (!existing.equals(detail) && existing.getPassengerDocument().equals(cleanDocument)) {
+                throw new ValidationException("Ya existe un pasajero con ese documento.");
+            }
+        }
+
+        detail.setPassengerFullName(newName);
+        detail.setPassengerDocument(newDocument);
+    }
 }

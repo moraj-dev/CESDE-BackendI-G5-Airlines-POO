@@ -30,7 +30,7 @@ public class ReservationDetail {
         this.seat = Validator.requireNotNull(seat, "silla del pasajero");
     }
 
-    private static String validateDocument(String passengerDocument) {
+    static String validateDocument(String passengerDocument) {
         String cleanDocument = Validator.requireText(passengerDocument, "documento del pasajero", MAX_PASSENGER_DOCUMENT_LENGTH);
         String upperDocument = cleanDocument.toUpperCase();
         for (char c : upperDocument.toCharArray()) {

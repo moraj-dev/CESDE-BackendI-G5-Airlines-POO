@@ -38,4 +38,9 @@ public class ReservationService {
         Reservation reservation = getById(reservationId);
         reservation.changeSeat(detail, newSeat);
     }
+
+    public void updatePassenger(int reservationId, ReservationDetail detail, String newName, String newDocument){
+        Reservation reservation = getById(reservationId);
+        reservation.updatePassenger(detail, newName, newDocument);
+    }
 }
