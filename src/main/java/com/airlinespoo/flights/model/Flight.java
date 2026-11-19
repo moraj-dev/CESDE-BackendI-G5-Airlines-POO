@@ -1,13 +1,14 @@
 package com.airlinespoo.flights.model;
 
+import com.airlinespoo.core.exception.ValidationException;
 import com.airlinespoo.core.model.Identifiable;
+import com.airlinespoo.core.util.Validator;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Locale;
-import java.util.Objects;
 
 public class Flight implements Comparable<Flight>, Identifiable<Integer> {
     //Atributos
@@ -27,30 +28,30 @@ public class Flight implements Comparable<Flight>, Identifiable<Integer> {
         this.id = id;
 
         //Validación del nombre del vuelo
-        this.flightName = validateFlightName(flightName);
+        this.flightName = normalizeFlightName(flightName);
 
         //Validación de que los aeropuertos no sean nulos y además sean diferentes
-        this.departure = Objects.requireNonNull(departure, "El aeropuerto de salida no puede estar vacío");
-        this.arrival = Objects.requireNonNull(arrival, "El aeropuerto de llegada no puede estar vacío");
+        this.departure = Validator.requireNotNull(departure, "aeropuerto de salida");
+        this.arrival = Validator.requireNotNull(arrival, "aeropuerto de llegada");
         if (departure.equals(arrival)) {
-            throw new IllegalArgumentException("Los aeropuertos deben ser diferentes");
+            throw new ValidationException("Los aeropuertos deben ser diferentes");
         }
 
-        this.departureDate = Objects.requireNonNull(departureDate, "La fecha de salida no puede estar vacía");
-        this.departureTime = Objects.requireNonNull(departureTime, "La hora de salida no puede estar vacía");
-        this.arrivalDate = Objects.requireNonNull(arrivalDate, "La fecha de llegada no puede estar vacía");
-        this.arrivalTime = Objects.requireNonNull(arrivalTime, "La hora de llegada no puede estar vacía");
+        this.departureDate = Validator.requireNotNull(departureDate, "fecha de salida");
+        this.departureTime = Validator.requireNotNull(departureTime, "hora de salida");
+        this.arrivalDate = Validator.requireNotNull(arrivalDate, "fecha de llegada");
+        this.arrivalTime = Validator.requireNotNull(arrivalTime, "hora de llegada");
 
         //Unión de fecha y hora
         LocalDateTime departureDateTime = departureDate.atTime(departureTime);
         LocalDateTime arrivalDateTime = arrivalDate.atTime(arrivalTime);
 
         //Validación que la fecha y hora de llegada sea posterior a la de salida
-        if (departureDateTime.compareTo(arrivalDateTime) >= 0) {
-            throw new IllegalArgumentException("La fecha y hora de llegada debe ser posterior a la fecha y hora de salida");
+        if (!arrivalDateTime.isAfter(departureDateTime)) {
+            throw new ValidationException("La fecha y hora de llegada debe ser posterior a la fecha y hora de salida");
         }
 
-        this.airline = Objects.requireNonNull(airline, "La aerolínea no puede estar vacía");
+        this.airline = Validator.requireNotNull(airline, "aerolínea");
     }
 
     //Métodos
@@ -72,13 +73,15 @@ public class Flight implements Comparable<Flight>, Identifiable<Integer> {
 
     //Validar si un vuelo ya salió o no
     public boolean hasDeparted(LocalDateTime dateTimeToCompare) {
-        return dateTimeToCompare.compareTo(getDepartureDateTime()) >= 0;
+        Validator.requireNotNull(dateTimeToCompare,"fecha y hora de referencia");
+        return !dateTimeToCompare.isBefore(getDepartureDateTime());
     }
 
     //Interfaz Comparable
     @Override
     public int compareTo(Flight other) {
-        return getDepartureDateTime().compareTo(other.getDepartureDateTime());
+        int result = getDepartureDateTime().compareTo(other.getDepartureDateTime());
+        return result !=0? result:Integer.compare(id, other.id);
     }
 
     @Override
@@ -94,7 +97,7 @@ public class Flight implements Comparable<Flight>, Identifiable<Integer> {
 
     @Override
     public int hashCode() {
-        return Integer.hashCode(getId());
+        return Integer.hashCode(id);
     }
 
     //Convertir a cadena de texto el objeto sobreescribiéndolo
@@ -109,32 +112,18 @@ public class Flight implements Comparable<Flight>, Identifiable<Integer> {
             "\n- Fecha y hora de llegada: " + getArrivalDateTime();
     }
 
-    //Reprogramar vuelo
-    public void rescheduleFlight(LocalDateTime newDepartureDateTime) {
-        Objects.requireNonNull(newDepartureDateTime, "El campo fecha y hora no puede estar vacío.");
-        Duration originalDuration = getFlightDuration();
-        LocalDateTime newArrivalDateTime = newDepartureDateTime.plus(originalDuration);
-        this.departureDate = (newDepartureDateTime.toLocalDate());
-        this.departureTime = (newDepartureDateTime.toLocalTime());
-        this.arrivalDate = (newArrivalDateTime.toLocalDate());
-        this.arrivalTime = (newArrivalDateTime.toLocalTime());
-    }
-
-    private String validateFlightName(String flightName) {
-        if (flightName == null || flightName.isBlank()) {
-            throw new IllegalArgumentException("El elemento está vacío");
-        } else {
-            flightName = flightName.toUpperCase(Locale.ROOT);
-            if (flightName.matches("^[A-Z0-9]{1,8}$")) {
-                return flightName;
-            } else
-                throw new IllegalArgumentException("el nombre debe tener máximo 8 caracteres, letras mayúsculas de la A a la Z y números sin símbolos");
+    public static String normalizeFlightName(String value) {
+        String name = Validator.requireText(value, "código del vuelo", 8)
+            .toUpperCase(Locale.ROOT);
+        if (!name.matches("[A-Z0-9]+")) {
+            throw new ValidationException(
+                "El campo 'código del vuelo' solo admite letras y dígitos, sin espacios ni símbolos.");
         }
-
+        return name;
     }
 
     //Getters
-
+    @Override
     public Integer getId() {
         return id;
     }
@@ -169,11 +158,5 @@ public class Flight implements Comparable<Flight>, Identifiable<Integer> {
 
     public Airline getAirline() {
         return airline;
-    }
-
-    //Setters
-
-    public void setFlightName(String flightName) {
-        this.flightName = validateFlightName(flightName);
     }
 }
