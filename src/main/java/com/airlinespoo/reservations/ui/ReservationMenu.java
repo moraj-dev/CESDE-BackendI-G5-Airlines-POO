@@ -80,16 +80,31 @@ public class ReservationMenu implements Menu {
                     ReservationDetail detail = service.findPassenger(reservationId, passengerId);
                     String row = input.readRequiredText("Letra de la fila");
                     int seatNumber = input.readInt("Número de la silla", 1, 99);
-                    service.changeSeat(reservationId, detail, new Seat(row,seatNumber));
+                    service.changeSeat(reservationId, detail, new Seat(row, seatNumber));
                     System.out.println("Silla cambiada");
                 } catch (NotFoundException | ValidationException e) {
                     System.out.println(e.getMessage());
 
                 }
             }
+
+            if (option == 2) {
+                try {
+                    int reservationId = input.readInt("Número de la reservación", 1, 9999);
+                    int passengerId = input.readInt("Número del pasajero", 1, 9999);
+                    ReservationDetail detail = service.findPassenger(reservationId, passengerId);
+                    String newName = input.readRequiredText("Nombre completo del pasajero");
+                    String newDocument = input.readRequiredText("Documento del pasajero");
+                    service.updatePassenger(reservationId, detail,newName,newDocument);
+                    System.out.println("Datos actualizados");
+                } catch (NotFoundException | ValidationException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
         }
     }
 }
+
 
 
 
