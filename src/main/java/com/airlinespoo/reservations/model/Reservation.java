@@ -3,6 +3,7 @@ package com.airlinespoo.reservations.model;
 import com.airlinespoo.core.exception.ValidationException;
 import com.airlinespoo.core.model.Identifiable;
 import com.airlinespoo.core.util.Validator;
+import com.airlinespoo.customers.model.Customer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +12,14 @@ import java.util.Objects;
 public class Reservation implements Identifiable<Integer> {
     private static final int MAX_PASSENGER = 10;
     private final int id;
+    private final Customer customer;
     private final List<ReservationDetail> details = new ArrayList<>();
 
-    public Reservation(int id, ReservationDetail firstDetail) {
+    public Reservation(int id,Customer customer, ReservationDetail firstDetail) {
         Validator.requirePositive(id, "número de la reserva");
         this.id = id;
+        Validator.requireNotNull(customer,"cliente");
+        this.customer = customer;
         Validator.requireNotNull(firstDetail, "primer pasajero");
         addDetail(firstDetail);
 
@@ -23,6 +27,10 @@ public class Reservation implements Identifiable<Integer> {
 
     public List<ReservationDetail> getDetails() {
         return List.copyOf(details);
+    }
+
+    public Customer getCustomer(){
+        return customer;
     }
 
     @Override
@@ -49,7 +57,7 @@ public class Reservation implements Identifiable<Integer> {
 
     @Override
     public String toString() {
-        return id + ": " + details.size() + details;
+        return id + ": " + customer.getId() + " - " + details.size() + details;
     }
 
     public void addDetail(ReservationDetail detail) {
