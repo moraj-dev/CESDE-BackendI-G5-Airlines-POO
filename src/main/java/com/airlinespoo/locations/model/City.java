@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class City implements Identifiable<Integer> {
 
-    private static final int MAX_NAME_LENGTH = 20;
+    public static final int MAX_NAME_LENGTH = 20;
 
     private final int id;
     private String name;
