@@ -15,7 +15,6 @@ public class Customer implements Identifiable<String> {
     private static final String EMAIL_PATTERN = "[^@\\s]+@[^@\\s]+\\.[^@\\s]+";
     private static final String TELEPHONE_FIELD = "teléfono del cliente";
     private static final String EMAIL_FIELD = "correo del cliente";
-    private static int maxLength, field;
 
     private final String id;
     private String firstName;
