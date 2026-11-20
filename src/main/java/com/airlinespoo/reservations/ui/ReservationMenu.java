@@ -5,6 +5,7 @@ import com.airlinespoo.core.exception.ValidationException;
 import com.airlinespoo.core.ui.ConsoleInput;
 import com.airlinespoo.core.ui.Menu;
 import com.airlinespoo.reservations.model.ReservationDetail;
+import com.airlinespoo.reservations.model.Seat;
 import com.airlinespoo.reservations.service.ReservationService;
 
 public class ReservationMenu implements Menu {
@@ -66,6 +67,21 @@ public class ReservationMenu implements Menu {
                     ReservationDetail detail = service.findPassenger(reservationId, passengerId);
                     service.removePassenger(reservationId, detail);
                     System.out.println("Pasajero eliminado");
+                } catch (NotFoundException | ValidationException e) {
+                    System.out.println(e.getMessage());
+
+                }
+            }
+
+            if (option == 3) {
+                try {
+                    int reservationId = input.readInt("Número de la reservación", 1, 9999);
+                    int passengerId = input.readInt("Número del pasajero", 1, 9999);
+                    ReservationDetail detail = service.findPassenger(reservationId, passengerId);
+                    String row = input.readRequiredText("Letra de la fila");
+                    int seatNumber = input.readInt("Número de la silla", 1, 99);
+                    service.changeSeat(reservationId, detail, new Seat(row,seatNumber));
+                    System.out.println("Silla cambiada");
                 } catch (NotFoundException | ValidationException e) {
                     System.out.println(e.getMessage());
 
