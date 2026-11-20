@@ -45,6 +45,16 @@ public class ReservationService {
         reservation.updatePassenger(detail, newName, newDocument);
     }
 
+    public ReservationDetail findPassenger(int reservationId, int passengerId){
+        Reservation reservation = getById(reservationId);
+        for (ReservationDetail detail : reservation.getDetails()){
+            if (detail.getId() == passengerId){
+                return detail;
+            }
+        }
+        throw new NotFoundException("pasajero", passengerId);
+    }
+
     public List<ReservationDetail> listPassengers(int reservationId){
         Reservation reservation = getById(reservationId);
         return reservation.getDetails();

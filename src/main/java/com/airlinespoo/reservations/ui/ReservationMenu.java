@@ -1,8 +1,10 @@
 package com.airlinespoo.reservations.ui;
 
 import com.airlinespoo.core.exception.NotFoundException;
+import com.airlinespoo.core.exception.ValidationException;
 import com.airlinespoo.core.ui.ConsoleInput;
 import com.airlinespoo.core.ui.Menu;
+import com.airlinespoo.reservations.model.ReservationDetail;
 import com.airlinespoo.reservations.service.ReservationService;
 
 public class ReservationMenu implements Menu {
@@ -56,9 +58,23 @@ public class ReservationMenu implements Menu {
 
                 }
             }
+
+            if (option == 4) {
+                try {
+                    int reservationId = input.readInt("Número de la reservación", 1, 9999);
+                    int passengerId = input.readInt("Número del pasajero", 1, 9999);
+                    ReservationDetail detail = service.findPassenger(reservationId, passengerId);
+                    service.removePassenger(reservationId, detail);
+                    System.out.println("Pasajero eliminado");
+                } catch (NotFoundException | ValidationException e) {
+                    System.out.println(e.getMessage());
+
+                }
+            }
         }
     }
 }
+
 
 
 
