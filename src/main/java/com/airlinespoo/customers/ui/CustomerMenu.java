@@ -100,7 +100,7 @@ public class CustomerMenu implements Menu {
         String telephone = input.readRequiredText("Teléfono (solo dígitos, + opcional al inicio)");
         String email = input.readOptionalText("Correo electrónico"); //Opcional
         printCountries();
-        int countryId = input.readInt(COUNTRY_ID_PROMPT, 1, 195);
+        int countryId = input.readInt(COUNTRY_ID_PROMPT, 1, Country.MAX_ID);
         String address = input.readOptionalText("Dirección"); //Opcional
 
         Customer customer = service.createCustomer(document, firstName, lastName, documentTypeCode,
@@ -242,7 +242,7 @@ public class CustomerMenu implements Menu {
     //Registra un país (Create)
     private void createCountry() {
         System.out.println("--- Registrar país ---");
-        int id = input.readInt(COUNTRY_ID_PROMPT, 1, 195);
+        int id = input.readInt(COUNTRY_ID_PROMPT, 1, Country.MAX_ID);
         String name = input.readRequiredText("Nombre del país");
 
         Country country = service.createCountry(id, name);
@@ -252,7 +252,7 @@ public class CustomerMenu implements Menu {
     //Cambia el nombre de un país (Update)
     private void renameCountry() {
         System.out.println("--- Cambiar nombre de un país ---");
-        int id = input.readInt(COUNTRY_ID_PROMPT, 1, 195);
+        int id = input.readInt(COUNTRY_ID_PROMPT, 1, Country.MAX_ID);
         String name = input.readRequiredText("Nombre nuevo");
 
         Country country = service.updateCountry(id, name);
@@ -262,7 +262,7 @@ public class CustomerMenu implements Menu {
     //Elimina un país (Delete), el servicio lo rechaza si tiene clientes
     private void deleteCountry() {
         System.out.println("--- Eliminar país ---");
-        int id = input.readInt(COUNTRY_ID_PROMPT, 1, 195);
+        int id = input.readInt(COUNTRY_ID_PROMPT, 1, Country.MAX_ID);
 
         service.deleteCountry(id);
         System.out.println("País eliminado.");

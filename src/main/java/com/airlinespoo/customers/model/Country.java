@@ -9,6 +9,9 @@ public class Country implements Identifiable<Integer>{ //Se implementa la interf
     private String name;
     private static final int MAX_LENGTH_NAME =20;
     //Constante donde se define el maximo de letras del nombre del país
+    public static final int MAX_ID = 195;
+    //Constante con el total de países del mundo, es el id más grande que se permite.
+    //Es pública porque el menú también la usa para pedir el id
 
     /**
      @param name //nombre, obligatorio
@@ -18,7 +21,7 @@ public class Country implements Identifiable<Integer>{ //Se implementa la interf
         int id, //Se declara el constructor
         String name
     ) {
-        Validator.requireInRange(id,1, 195, "El id del país");
+        Validator.requireInRange(id,1, MAX_ID, "El id del país");
         this.id = id; //Se pone los parametros del constructor
         setName(name);
     }
