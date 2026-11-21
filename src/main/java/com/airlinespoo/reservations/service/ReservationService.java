@@ -1,6 +1,7 @@
 package com.airlinespoo.reservations.service;
 
 import com.airlinespoo.core.exception.NotFoundException;
+import com.airlinespoo.core.util.IdGenerator;
 import com.airlinespoo.reservations.model.Reservation;
 import com.airlinespoo.reservations.model.ReservationDetail;
 import com.airlinespoo.reservations.model.Seat;
@@ -11,9 +12,11 @@ import java.util.Optional;
 
 public class ReservationService {
     private final ReservationRepository repository;
+    private final IdGenerator detailIdGenerator;
 
-    public ReservationService(ReservationRepository repository) {
+    public ReservationService(ReservationRepository repository, IdGenerator detailIdGenerator) {
         this.repository = repository;
+        this.detailIdGenerator = detailIdGenerator;
     }
 
     public Reservation getById(int id) {
@@ -28,6 +31,11 @@ public class ReservationService {
        Reservation reservation = getById(reservationId);
        reservation.addDetail(detail);
 
+    }
+
+    public void addPassenger(int reservationId, String passengerFullName, String passengerDocument, Seat seat){
+        ReservationDetail detail2 = new ReservationDetail(detailIdGenerator.next(), passengerFullName, passengerDocument, seat);
+        addPassenger(reservationId,detail2);
     }
 
     public void removePassenger(int reservationId, ReservationDetail detail){

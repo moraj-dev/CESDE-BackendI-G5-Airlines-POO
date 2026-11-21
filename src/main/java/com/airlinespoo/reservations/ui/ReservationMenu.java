@@ -95,8 +95,22 @@ public class ReservationMenu implements Menu {
                     ReservationDetail detail = service.findPassenger(reservationId, passengerId);
                     String newName = input.readRequiredText("Nombre completo del pasajero");
                     String newDocument = input.readRequiredText("Documento del pasajero");
-                    service.updatePassenger(reservationId, detail,newName,newDocument);
+                    service.updatePassenger(reservationId, detail, newName, newDocument);
                     System.out.println("Datos actualizados");
+                } catch (NotFoundException | ValidationException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+
+            if (option == 1) {
+                try {
+                    int reservationId = input.readInt("Número de la reservación", 1, 9999);
+                    String newName = input.readRequiredText("Nombre completo del pasajero");
+                    String newDocument = input.readRequiredText("Documento del pasajero");
+                    String row = input.readRequiredText("Letra de la fila");
+                    int seatNumber = input.readInt("Número de la silla", 1, 99);
+                    service.addPassenger(reservationId, newName, newDocument, new Seat(row, seatNumber));
+                    System.out.println("Pasajero agregado");
                 } catch (NotFoundException | ValidationException e) {
                     System.out.println(e.getMessage());
                 }
