@@ -32,13 +32,19 @@ public class ReservationMenu implements Menu {
             System.out.println("5. Listar pasajeros");
             System.out.println("6. Listar reservaciones");
             System.out.println("7. Cancelar reservación");
-            System.out.println("8. Volver");
-            int option = input.readInt("Elige una opción", 1, 8);
-            if (option == 8) {
+            System.out.println("8. Consultar reservaciones por cliente");
+            System.out.println("9. Volver");
+            int option = input.readInt("Elige una opción", 1, 9);
+            if (option == 9) {
                 return;
             }
             if (option == 6) {
                 System.out.println(service.listReservations());
+            }
+
+            if (option == 8){
+                String customerId = input.readRequiredText("Id del cliente");
+                System.out.println(service.listReservationsByCustomer(customerId));
             }
             if (option == 5) {
                 try {

@@ -72,6 +72,10 @@ public class ReservationService {
         return repository.findAll();
     }
 
+    public List<Reservation> listReservationsByCustomer(String customerId){
+        return repository.findByCustomer(customerId);
+    }
+
     public void cancelReservation(int reservationId){
         if (!repository.deleteById(reservationId)){
             throw new NotFoundException("reservación", reservationId);
