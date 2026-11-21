@@ -2,6 +2,12 @@ package com.airlinespoo.app;
 
 import com.airlinespoo.core.ui.ConsoleInput;
 import com.airlinespoo.core.ui.Menu;
+import com.airlinespoo.customers.repository.CountryRepository;
+import com.airlinespoo.customers.repository.DocumentTypeRepository;
+import com.airlinespoo.customers.repository.InMemoryCustomerRepository;
+import com.airlinespoo.customers.service.CustomerService;
+import com.airlinespoo.customers.ui.CustomerMenu;
+import com.airlinespoo.customers.ui.CustomerSampleData;
 
 /**
  * Punto de entrada de Airlines-poo.
