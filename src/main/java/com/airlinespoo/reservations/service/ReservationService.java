@@ -76,6 +76,10 @@ public class ReservationService {
         return repository.findByCustomer(customerId);
     }
 
+    public boolean customerHasReservations(String customerId){
+        return repository.existsByCustomer(customerId);
+    }
+
     public void cancelReservation(int reservationId){
         if (!repository.deleteById(reservationId)){
             throw new NotFoundException("reservación", reservationId);

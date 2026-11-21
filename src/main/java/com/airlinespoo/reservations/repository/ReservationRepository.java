@@ -23,5 +23,10 @@ public class ReservationRepository extends InMemoryRepository<Reservation, Integ
 
         return found;
     }
+
+    public boolean existsByCustomer(String customerId) {
+        return !findByCustomer(customerId).isEmpty();
+
+    }
 }
 
