@@ -45,7 +45,7 @@ public class DocumentType implements Identifiable<String> {
     }
 
     public void setDescription (String description){
-        this.description = Validator.requireText(description, "En la descripción del Document Type",
+        this.description = Validator.requireText(description, "descripción del tipo de documento",
             MAX_DESCRIPTION_LENGTH);
     }
 
@@ -68,7 +68,7 @@ public class DocumentType implements Identifiable<String> {
 
     @Override
     public String toString () {
-        return "DocumentType {id =´ " + id + "´ , description= " + description + "´}";
+        return "DocumentType{id='" + id + "', description='" + description + "'}";
     }
 }
 

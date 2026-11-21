@@ -11,6 +11,6 @@ public class CountryRepository extends InMemoryRepository<Country, Integer>{
 
     @Override
     protected String entityName() {
-        return "Country";
+        return "país";
     }
 }

@@ -33,7 +33,6 @@ public class Country implements Identifiable<Integer>{ //Se implementa la interf
     public void setName(String name) {
         this.name = Validator.requireText(name, "nombre del país", MAX_LENGTH_NAME);
         //Validacion de que el nombre cumpla con el requisito de las 20 letras
-        //this.name = name;
     }
 
     //Se verifica si dos países tienen el mismo id, serían el mismo país (equals)

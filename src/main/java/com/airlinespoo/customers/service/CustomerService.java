@@ -42,7 +42,7 @@ public class CustomerService {
     public Country getCountry(int id) {
         Optional<Country> country = countryRepository.findById(id);
         if (country.isEmpty()) {
-            throw new NotFoundException("El país", id); // Si no existe
+            throw new NotFoundException("país", id); // Si no existe
         }
         return country.get();
     }
@@ -65,8 +65,8 @@ public class CustomerService {
     public void deleteCountry(int id) {
         Country country = getCountry(id);
         if (customerRepository.existsByCountry(country)) {
-            throw new BusinessRuleException("No se puede eliminar el país, ´" + country.getName()
-                + "´debido a que ya tiene clientes");
+            throw new BusinessRuleException("No se puede eliminar el país '" + country.getName()
+                + "' debido a que ya tiene clientes");
         }
         countryRepository.deleteById(id);
     }
@@ -83,7 +83,7 @@ public class CustomerService {
         String normalized = DocumentType.normalizeCode(code);
         Optional<DocumentType> documentType = documentTypeRepository.findById(normalized);
         if (documentType.isEmpty()) {
-            throw new NotFoundException("Tipo de documento ", normalized);
+            throw new NotFoundException("tipo de documento", normalized);
         }
         return documentType.get();
     }
@@ -104,8 +104,8 @@ public class CustomerService {
     public void deleteDocumentType(String code) {
         DocumentType documentType = getDocumentType(code);
         if (customerRepository.existsByDocumentType(documentType)) {
-            throw new BusinessRuleException("No se puede eliminar el tipo de documento ´"
-                + documentType.getId() + "´porque hay clientes que lo usan");
+            throw new BusinessRuleException("No se puede eliminar el tipo de documento '"
+                + documentType.getId() + "' porque hay clientes que lo usan");
         }
         documentTypeRepository.deleteById(documentType.getId());
     }
@@ -149,7 +149,7 @@ public class CustomerService {
         return customerRepository.update(customer);
     }
 
-    //Elimina un cliente si este no tiene reservas
+    //Elimina un cliente (por ahora siempre se permite)
     public void deleteCustomer(String id) {
         Customer customer = getCustomer(id);
         customerRepository.deleteById(customer.getId());
@@ -194,7 +194,7 @@ public class CustomerService {
     private void requireUniqueEmail(String email, String ownerId) {
         Optional<Customer> other = customerRepository.findByEmail(Validator.normalize(email));
         if (other.isPresent() && !other.get().getId().equals(ownerId)) {
-            throw new DuplicateException("Ya existe un cliente con el correo ´" + other.get().getEmail() + "´");
+            throw new DuplicateException("Ya existe un cliente con el correo '" + other.get().getEmail() + "'");
         }
     }
 

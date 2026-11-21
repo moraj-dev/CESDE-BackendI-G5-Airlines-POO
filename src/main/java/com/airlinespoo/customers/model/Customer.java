@@ -128,7 +128,7 @@ public class Customer implements Identifiable<String> {
         String text = Validator.requireText(telephoneNumber, TELEPHONE_FIELD, MAX_TELEPHONE_LENGTH);
         if (!text.matches(TELEPHONE_PATTERN)) { //Si el numero no cumple con el formato ejecuta IF
             //text.matches compara el texto ingresado con la expresion
-            throw new ValidationException("El campo ´" + TELEPHONE_FIELD + " no es valido, aolo se admite dígitos " +
+            throw new ValidationException("El campo '" + TELEPHONE_FIELD + "' no es válido, solo se admiten dígitos " +
                 "con la opción del + al inicio");
         }
         return text;
@@ -137,7 +137,7 @@ public class Customer implements Identifiable<String> {
     private static String validateEmail(String email) {
         String text = optionalText(email, EMAIL_FIELD, MAX_EMAIL_LENGTH);
         if (text != null && !text.matches(EMAIL_PATTERN)) {
-            throw new ValidationException("El campo ´" + EMAIL_FIELD + "´no tiene un fomato válido");
+            throw new ValidationException("El campo '" + EMAIL_FIELD + "' no tiene un formato válido");
         }
         return text;
     }
@@ -176,8 +176,8 @@ public class Customer implements Identifiable<String> {
     //Muestra los datos, excepto dirección, correo y telefono
     @Override
     public String toString() {
-        return "Customer{id=` " + id + " `, fullName=` " + getFullName() + "´, documentType=´" + documentType.getId() +
-            "`,country=`" + country.getName() + "`} ";
+        return "Customer{id='" + id + "', fullName='" + getFullName() + "', documentType='" + documentType.getId() +
+            "', country='" + country.getName() + "'}";
     }
 }
 
