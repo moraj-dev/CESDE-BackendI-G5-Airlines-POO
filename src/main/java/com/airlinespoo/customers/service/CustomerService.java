@@ -13,16 +13,19 @@ import com.airlinespoo.customers.repository.CustomerRepository;
 import java.util.List;
 import java.util.Optional;
 
-//El servicio coordina: pide datos a los respositorios y comprueba las reglas de los objetos y lanza excepciones
-//Se reciben los datos del repositorio por medio del constructor
-
+/**
+ * El servicio coordina: pide datos a los respositorios y comprueba las reglas de los objetos y lanza excepciones
+ * Se reciben los datos del repositorio por medio del constructor
+ */
 public class CustomerService {
 
     private final Repository<Country, Integer> countryRepository;
     private final Repository<DocumentType, String> documentTypeRepository;
     private final CustomerRepository customerRepository;
 
-    //Creación del servicio con los repositorios que se van a usar
+    /**
+     * Creación del servicio con los repositorios que se van a usar
+     */
     public CustomerService(Repository<Country, Integer> countryRepository,
                            Repository<DocumentType, String> documentTypeRepository,
                            CustomerRepository customerRepository) {
@@ -33,12 +36,16 @@ public class CustomerService {
 
     //-----------------------------------------------------------//--------------------------------------------------//
 
-    //Registra un país (Create)
+    /**
+     * Registra un país (Create)
+     */
     public Country createCountry(int id, String name) {
         return countryRepository.create(new Country(id, name));
     }
 
-    //Consulta un país por su id (Read)
+    /**
+     * Consulta un país por su id (Read)
+     */
     public Country getCountry(int id) {
         Optional<Country> country = countryRepository.findById(id);
         if (country.isEmpty()) {
@@ -47,21 +54,27 @@ public class CustomerService {
         return country.get();
     }
 
-    //Lista los países ordenados por nombre
+    /**
+     * Lista los países ordenados por nombre
+     */
     public List<Country> listCountries() {
         List<Country> countries = countryRepository.findAll();
         countries.sort(new CountryNameComparator());
         return countries;
     }
 
-    //Cambiar nombre de un país (Update)
+    /**
+     * Cambiar nombre de un país (Update)
+     */
     public Country updateCountry(int id, String name) {
         Country country = getCountry(id);
         country.setName(name);
         return countryRepository.update(country);
     }
 
-    //Eliminar un país (Delete) y solo si ningun cliente pertenece a el
+    /**
+     * Eliminar un país (Delete) y solo si ningun cliente pertenece a el
+     */
     public void deleteCountry(int id) {
         Country country = getCountry(id);
         if (customerRepository.existsByCountry(country)) {
@@ -73,12 +86,16 @@ public class CustomerService {
 
     //--------------------------------------------------------//------------------------------------------------------//
 
-    //Registrar un tipo de documento (Insert)
+    /**
+     * Registrar un tipo de documento (Insert)
+     */
     public DocumentType createDocumentType(String code, String description) {
         return documentTypeRepository.create(new DocumentType(code, description));
     }
 
-    //Consulta un tipo de documento por code (Select) y se normaliza así cc encuentra a CC
+    /**
+     * Consulta un tipo de documento por code (Select) y se normaliza así cc encuentra a CC
+     */
     public DocumentType getDocumentType(String code) {
         String normalized = DocumentType.normalizeCode(code);
         Optional<DocumentType> documentType = documentTypeRepository.findById(normalized);
@@ -88,19 +105,25 @@ public class CustomerService {
         return documentType.get();
     }
 
-    //Lista los tipos de documento en orden de registro
+    /**
+     * Lista los tipos de documento en orden de registro
+     */
     public List<DocumentType> listDocumentTypes() {
         return documentTypeRepository.findAll();
     }
 
-    //Cambia la descripcion de un tipo de documento (UPDATE)
+    /**
+     * Cambia la descripcion de un tipo de documento (UPDATE)
+     */
     public DocumentType updateDocumentType(String code, String description) {
         DocumentType documentType = getDocumentType(code);
         documentType.setDescription(description);
         return documentTypeRepository.update(documentType);
     }
 
-    //Elimina un tipo de documento (Delete) solo si ningun cliente lo usa
+    /**
+     * Elimina un tipo de documento (Delete) solo si ningun cliente lo usa
+     */
     public void deleteDocumentType(String code) {
         DocumentType documentType = getDocumentType(code);
         if (customerRepository.existsByDocumentType(documentType)) {
@@ -111,8 +134,10 @@ public class CustomerService {
     }
 
     //----------------------------------------------//---------------------------------------------------------------//
-    //Registrar un cliente, donde el DocumentType y Country ya deben existir.
-    //El documento y el correo no pueden repetirse
+    /**
+     * Registrar un cliente, donde el DocumentType y Country ya deben existir.
+     * El documento y el correo no pueden repetirse
+     */
     public Customer createCustomer(String id, String firstName, String lastName, String documentTypeCode,
                                    String telephoneNumber, String email, int countryId, String address) {
         DocumentType documentType = getDocumentType(documentTypeCode);
@@ -127,7 +152,9 @@ public class CustomerService {
         return customerRepository.create(customer);
     }
 
-    //Consulta un cliente por documento
+    /**
+     * Consulta un cliente por documento
+     */
     public Customer getCustomer(String id) {
         Optional<Customer> customer = customerRepository.findById(Validator.normalize(id));
         if (customer.isEmpty()) {
@@ -136,12 +163,16 @@ public class CustomerService {
         return customer.get();
     }
 
-    //Lista a los clientes ordenados por apellido y luego por nombre
+    /**
+     * Lista a los clientes ordenados por apellido y luego por nombre
+     */
     public List<Customer> listCustomers() {
         return sortByName(customerRepository.findAll());
     }
 
-    //Actualiza los datos de contacto del cliente como e telefono, la direccion y el correo
+    /**
+     * Actualiza los datos de contacto del cliente como e telefono, la direccion y el correo
+     */
     public Customer updateCustomer(String id, String telephoneNumber, String email, String address) {
         Customer customer = getCustomer(id);
         requireUniqueEmail(email, customer.getId());
@@ -149,25 +180,32 @@ public class CustomerService {
         return customerRepository.update(customer);
     }
 
-    //Elimina un cliente (por ahora siempre se permite)
+    /**
+     * Elimina un cliente (por ahora siempre se permite)
+     */
     public void deleteCustomer(String id) {
         Customer customer = getCustomer(id);
         customerRepository.deleteById(customer.getId());
     }
 
-    //Busca un cliente por correo
+    /**
+     * Busca un cliente por correo
+     */
     public Optional<Customer> getCustomerByEmail(String email) {
         return customerRepository.findByEmail(email);
     }
 
-    /* Busca clientes por parte del apellido, sin importar si es mayuscula o minuscula
+    /**
+     * Busca clientes por parte del apellido, sin importar si es mayuscula o minuscula
      */
     public List<Customer> searchCustomersByLastName(String text) {
         String wanted = Validator.requireText(text, "apellido a buscar");
         return sortByName(customerRepository.findByLastNameContaining(wanted));
     }
 
-    //Lista a los clientes de un país
+    /**
+     * Lista a los clientes de un país
+     */
     public List<Customer> listCustomersByCountry(int countryId) {
         Country country = getCountry(countryId);
         return sortByName(customerRepository.findByCountry(country));

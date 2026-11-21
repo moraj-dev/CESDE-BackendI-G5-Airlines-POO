@@ -10,10 +10,11 @@ import com.airlinespoo.customers.service.CustomerService;
 
 import java.util.List;
 
-//Menú de consola del módulo 1. Esta es la única capa que habla con el usuario:
-//lee los datos con ConsoleInput, llama al servicio y muestra el resultado.
-//Si el servicio lanza una excepción se muestra el mensaje y el programa sigue, nunca se cierra
-
+/**
+ * Menú de consola del módulo 1. Esta es la única capa que habla con el usuario:
+ * lee los datos con ConsoleInput, llama al servicio y muestra el resultado.
+ * Si el servicio lanza una excepción se muestra el mensaje y el programa sigue, nunca se cierra
+ */
 public class CustomerMenu implements Menu {
 
     //Textos que se repiten varias veces cuando se piden datos
@@ -24,20 +25,26 @@ public class CustomerMenu implements Menu {
     private final CustomerService service;
     private final ConsoleInput input;
 
-    //Creación del menú con el servicio y el lector de consola que se van a usar
+    /**
+     * Creación del menú con el servicio y el lector de consola que se van a usar
+     */
     public CustomerMenu(CustomerService service, ConsoleInput input) {
         this.service = service;
         this.input = input;
     }
 
-    //Titulo que muestra el menú principal
+    /**
+     * Titulo que muestra el menú principal
+     */
     @Override
     public String title() {
         return "Clientes y catálogos";
     }
 
-    //Muestra las opciones y se repite hasta que el usuario escriba 0
-    //El try catch atrapa los errores del servicio para mostrar el mensaje y que el menú no se cierre
+    /**
+     * Muestra las opciones y se repite hasta que el usuario escriba 0
+     * El try catch atrapa los errores del servicio para mostrar el mensaje y que el menú no se cierre
+     */
     @Override
     public void run() {
         int option;

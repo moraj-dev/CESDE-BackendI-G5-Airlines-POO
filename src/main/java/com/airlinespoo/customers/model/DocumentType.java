@@ -5,6 +5,9 @@ import com.airlinespoo.core.exception.ValidationException;
 import com.airlinespoo.core.model.Identifiable;
 import com.airlinespoo.core.util.Validator;
 
+/**
+ * Clase que representa un tipo de documento (CC, TI, PA). Su id es un código de 2 letras
+ */
 public class DocumentType implements Identifiable<String> {
 
     private static final int CODE_LENGTH = 2;
@@ -17,7 +20,9 @@ public class DocumentType implements Identifiable<String> {
     //UNA sola vez
     private String description;
 
-    //Constructor para recibir los datos, validar que esten correctos y guardar la información
+    /**
+     * Constructor para recibir los datos, validar que esten correctos y guardar la información
+     */
     public DocumentType(
         String id,
         String description) {
@@ -31,24 +36,38 @@ public class DocumentType implements Identifiable<String> {
         setDescription(description);
     }
 
-    //Metodo que utilizara el constructor y el servicio para normalizar el id del tipo de documento, poner mayus y quitar espacio
+    /**
+     * Metodo que utilizara el constructor y el servicio para normalizar el id del tipo de documento, poner mayus y quitar espacio
+     */
     public static String normalizeCode(String code) {
         return Validator.requireText(code, CODE_FIELD).replace(" ","").toUpperCase();
     }
+    /**
+     * Devuelve el código del tipo de documento
+     */
     @Override
     public String getId() {
         return id;
     }
 
+    /**
+     * Devuelve la descripción del tipo de documento
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Cambia la descripción, valida que no esté vacía y el máximo de caracteres
+     */
     public void setDescription (String description){
         this.description = Validator.requireText(description, "descripción del tipo de documento",
             MAX_DESCRIPTION_LENGTH);
     }
 
+    /**
+     * Dos tipos de documento son el mismo si tienen el mismo código
+     */
     @Override
     public boolean equals (Object other){
         if (this == other) {
@@ -61,11 +80,17 @@ public class DocumentType implements Identifiable<String> {
         return id.equals(that.id);
     }
 
+    /**
+     * El hash se calcula con el código, igual que equals
+     */
     @Override
     public int hashCode () {
         return id.hashCode();
     }
 
+    /**
+     * Muestra el código y la descripción
+     */
     @Override
     public String toString () {
         return "DocumentType{id='" + id + "', description='" + description + "'}";

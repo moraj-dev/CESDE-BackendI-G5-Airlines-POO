@@ -11,18 +11,35 @@ import java.util.Optional;
 /**
  * Contrato (Interfaz) del repositorio de clientes que es el kit con el CRUD y las busquedas que necesita hacer service
  */
-
 public interface CustomerRepository extends Repository<Customer, String> {
 
-    Optional<Customer> findByEmail(String email); //Select Where Email
+    /**
+     * Select Where Email
+     */
+    Optional<Customer> findByEmail(String email);
 
-    List<Customer> findByLastNameContaining(String text); //Select Where Lastname
+    /**
+     * Select Where Lastname
+     */
+    List<Customer> findByLastNameContaining(String text);
 
-    List<Customer> findByCountry(Country country); //Select Where Country ID
+    /**
+     * Select Where Country ID
+     */
+    List<Customer> findByCountry(Country country);
 
+    /**
+     * Select Where Type ID
+     */
     List<Customer> findByDocumentType(DocumentType documentType);
 
-    boolean existsByCountry(Country country); //Sirve para no eliminar países en uso
+    /**
+     * Sirve para no eliminar países en uso
+     */
+    boolean existsByCountry(Country country);
 
-    boolean existsByDocumentType(DocumentType documentType); //Para no eliminar tipos de documento en uso
+    /**
+     * Para no eliminar tipos de documento en uso
+     */
+    boolean existsByDocumentType(DocumentType documentType);
 }

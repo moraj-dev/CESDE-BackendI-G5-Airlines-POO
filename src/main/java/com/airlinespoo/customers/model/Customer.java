@@ -4,6 +4,9 @@ import com.airlinespoo.core.exception.ValidationException;
 import com.airlinespoo.core.model.Identifiable;
 import com.airlinespoo.core.util.Validator;
 
+/**
+ * Clase que representa un cliente. Su id es el número de documento y no cambia
+ */
 public class Customer implements Identifiable<String> {
 
     private static final int MAX_ID_LENGTH = 20;
@@ -25,7 +28,9 @@ public class Customer implements Identifiable<String> {
     private Country country;
     private String address;
 
-    //Creacion del cliente con datos OBLIGATORIOS, la dirección y el correo se asignan luego con SETTERS
+    /**
+     * Creacion del cliente con datos OBLIGATORIOS, la dirección y el correo se asignan luego con SETTERS
+     */
     public Customer(String id,
                     String firstName,
                     String lastName,
@@ -40,80 +45,123 @@ public class Customer implements Identifiable<String> {
         setCountry(country);
     }
 
+    /**
+     * Devuelve el número de documento del cliente
+     */
     @Override
     public String getId() {
         return this.id;
     }
 
+    /**
+     * Devuelve los nombres del cliente
+     */
     public String getFirstName() {
         return firstName;
     }
 
-    //Validación del nombre para el maximo de caracteres y no puede ser null
+    /**
+     * Validación del nombre para el maximo de caracteres y no puede ser null
+     */
     public void setFirstName(String firstName) {
         this.firstName = Validator.requireText(firstName, "Nombre del cliente", MAX_NAME_LENGTH);
     }
 
+    /**
+     * Devuelve los apellidos del cliente
+     */
     public String getLastName() {
         return lastName;
     }
 
+    /**
+     * Cambia los apellidos, valida que no estén vacíos y el máximo de caracteres
+     */
     public void setLastName(String lastName) {
         this.lastName = Validator.requireText(lastName, "Apellido del cliente", MAX_NAME_LENGTH);
     }
 
-    //RETURN Nombres y apellidos separados por un espacio
+    /**
+     * RETURN Nombres y apellidos separados por un espacio
+     */
     public String getFullName() {
         return firstName + " " + lastName;
     }
 
+    /**
+     * Devuelve el tipo de documento del cliente
+     */
     public DocumentType getDocumentType() {
         return documentType;
     }
 
-    //No permite null en el documenttype
+    /**
+     * No permite null en el documenttype
+     */
     public void setDocumentType(DocumentType documentType) {
         this.documentType = Validator.requireNotNull(documentType, "Tipo de documento del cliente");
     }
 
+    /**
+     * Devuelve el teléfono del cliente
+     */
     public String getTelephoneNumber() {
         return telephoneNumber;
     }
 
+    /**
+     * Cambia el teléfono, valida que solo tenga dígitos (puede empezar con +)
+     */
     public void setTelephoneNumber(String telephoneNumber) {
         this.telephoneNumber = validateTelephone(telephoneNumber);
     }
 
-    //RETURN el correo o null si no tiene
+    /**
+     * RETURN el correo o null si no tiene
+     */
     public String getEmail() {
         return email;
     }
 
-    //Verificar si tiene correo, si cumple con el formato y los caracteres
+    /**
+     * Verificar si tiene correo, si cumple con el formato y los caracteres
+     */
     public void setEmail(String email) {
         this.email = validateEmail(email);
     }
 
+    /**
+     * Devuelve el país del cliente
+     */
     public Country getCountry() {
         return country;
     }
 
+    /**
+     * Cambia el país del cliente, no permite null
+     */
     public void setCountry(Country country) {
         this.country = Validator.requireNotNull(country, "País del cliente");
     }
 
-    //RETURN la direccion o null si no hay
+    /**
+     * RETURN la direccion o null si no hay
+     */
     public String getAddress() {
         return address;
     }
 
+    /**
+     * Cambia la dirección, es opcional y tiene un máximo de caracteres
+     */
     public void setAddress(String address) {
         this.address = validateAddress(address);
     }
 
-    /*Cambiar los tres datos del cliente a la vez (Telefono, correo y direccion), primero los valida y luego los asigna,
-    si uno es invalido, no se modifican y el cliente queda como estaba */
-
+    /**
+     * Cambiar los tres datos del cliente a la vez (Telefono, correo y direccion), primero los valida y luego los asigna,
+     * si uno es invalido, no se modifican y el cliente queda como estaba
+     */
     public void updateContact(String telephoneNumber, String email, String address) {
         String newTelephone = validateTelephone(telephoneNumber);
         String newEmail = validateEmail(email);
@@ -155,7 +203,9 @@ public class Customer implements Identifiable<String> {
         return Validator.requireMaxLength(text, maxLength, field);
     }
 
-    //Dos clientes son el mismo si tiene el mimo documento
+    /**
+     * Dos clientes son el mismo si tiene el mimo documento
+     */
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -168,12 +218,17 @@ public class Customer implements Identifiable<String> {
         return id.equals(that.id);
     }
 
+    /**
+     * El hash se calcula con el documento, igual que equals
+     */
     @Override
     public int hashCode() {
         return id.hashCode();
     }
 
-    //Muestra los datos, excepto dirección, correo y telefono
+    /**
+     * Muestra los datos, excepto dirección, correo y telefono
+     */
     @Override
     public String toString() {
         return "Customer{id='" + id + "', fullName='" + getFullName() + "', documentType='" + documentType.getId() +

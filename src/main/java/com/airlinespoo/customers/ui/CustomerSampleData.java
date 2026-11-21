@@ -2,17 +2,20 @@ package com.airlinespoo.customers.ui;
 
 import com.airlinespoo.customers.service.CustomerService;
 
-//Datos de ejemplo del módulo 1: 5 países, 4 tipos de documento y 3 clientes.
-//Se cargan al iniciar el programa para que los demas módulos puedan probar sin escribir datos cada vez.
-//Se crean por medio del servicio, así pasan por las mismas validaciones que los datos del usuario
-
+/**
+ * Datos de ejemplo del módulo 1: 5 países, 4 tipos de documento y 3 clientes.
+ * Se cargan al iniciar el programa para que los demas módulos puedan probar sin escribir datos cada vez.
+ * Se crean por medio del servicio, así pasan por las mismas validaciones que los datos del usuario
+ */
 public final class CustomerSampleData {
 
     //Constructor privado: de esta clase no se crean objetos, solo se usa el metodo load
     private CustomerSampleData() {
     }
 
-    //Carga todos los datos de ejemplo. Primero países y tipos de documento porque el cliente los necesita
+    /**
+     * Carga todos los datos de ejemplo. Primero países y tipos de documento porque el cliente los necesita
+     */
     public static void load(CustomerService service) {
         loadCountries(service);
         loadDocumentTypes(service);

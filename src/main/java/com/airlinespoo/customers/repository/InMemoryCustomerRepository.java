@@ -13,7 +13,6 @@ import java.util.Optional;
  * Repositorio de clientes en la memoria que hereda del Kit y el mapa encuentra un cliente sin reccorrer todos.
  * Solo busca y se reponde
  */
-
 public class InMemoryCustomerRepository extends InMemoryRepository<Customer, String> implements CustomerRepository {
 
     @Override
@@ -21,6 +20,9 @@ public class InMemoryCustomerRepository extends InMemoryRepository<Customer, Str
         return "Cliente";
     }
 
+    /**
+     * Busca un cliente por correo, sin importar mayúsculas o minúsculas
+     */
     @Override
     public Optional<Customer> findByEmail(String email){
         for (Customer customer : values()) {
@@ -31,6 +33,9 @@ public class InMemoryCustomerRepository extends InMemoryRepository<Customer, Str
         return Optional.empty();
     }
 
+    /**
+     * Busca los clientes que tienen ese texto en el apellido
+     */
     @Override
     public List<Customer> findByLastNameContaining(String text){
         String wanted = text.toLowerCase();
@@ -43,6 +48,9 @@ public class InMemoryCustomerRepository extends InMemoryRepository<Customer, Str
         return found;
     }
 
+    /**
+     * Lista los clientes de un país
+     */
     @Override
     public List<Customer> findByCountry(Country country){
         List<Customer> found = new ArrayList<>();
@@ -54,6 +62,9 @@ public class InMemoryCustomerRepository extends InMemoryRepository<Customer, Str
         return found;
     }
 
+    /**
+     * Lista los clientes con un tipo de documento
+     */
     @Override
     public List<Customer> findByDocumentType(DocumentType documentType) {
         List<Customer> found = new ArrayList<>();
@@ -65,11 +76,17 @@ public class InMemoryCustomerRepository extends InMemoryRepository<Customer, Str
         return found;
     }
 
+    /**
+     * Dice si algún cliente es de ese país
+     */
     @Override
     public boolean existsByCountry(Country country){
         return !findByCountry(country).isEmpty();
     }
 
+    /**
+     * Dice si algún cliente usa ese tipo de documento
+     */
     @Override
     public boolean existsByDocumentType(DocumentType documentType){
         return !findByDocumentType(documentType).isEmpty();

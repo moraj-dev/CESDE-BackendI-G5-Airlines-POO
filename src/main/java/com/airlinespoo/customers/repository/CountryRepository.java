@@ -6,7 +6,6 @@ import com.airlinespoo.customers.model.Country;
 /**
  * Repositorio en memoria de Country, este hereda del kit base inmemory
  */
-
 public class CountryRepository extends InMemoryRepository<Country, Integer>{
 
     @Override
