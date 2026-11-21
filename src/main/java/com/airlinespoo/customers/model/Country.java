@@ -7,7 +7,7 @@ public class Country implements Identifiable<Integer>{ //Se implementa la interf
 
     private int id; //Atributos
     private String name;
-    private static final int MAX_LETRAS_NOMBRE =20;
+    private static final int MAX_LENGTH_NAME =20;
     //Constante donde se define el maximo de letras del nombre del país
 
     /**
@@ -18,7 +18,7 @@ public class Country implements Identifiable<Integer>{ //Se implementa la interf
         int id, //Se declara el constructor
         String name
     ) {
-        Validator.requireInRange(id,1, 195, "El id debe estar entr 1 y 195");
+        Validator.requireInRange(id,1, 195, "El id del país");
         this.id = id; //Se pone los parametros del constructor
         setName(name);
     }
@@ -31,7 +31,7 @@ public class Country implements Identifiable<Integer>{ //Se implementa la interf
         return name;
     }
     public void setName(String name) {
-        this.name = Validator.requireText(name, "nombre del país", MAX_LETRAS_NOMBRE);
+        this.name = Validator.requireText(name, "nombre del país", MAX_LENGTH_NAME);
         //Validacion de que el nombre cumpla con el requisito de las 20 letras
         //this.name = name;
     }

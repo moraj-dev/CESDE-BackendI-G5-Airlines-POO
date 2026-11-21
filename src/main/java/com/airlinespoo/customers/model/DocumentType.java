@@ -27,7 +27,7 @@ public class DocumentType implements Identifiable<String> {
         if (code.length() != CODE_LENGTH) {
             throw new ValidationException("El campo " + CODE_FIELD + " debe tener " + CODE_LENGTH + " caracteres");
         }
-        this.id = id; //Guarda el valor que recibimos
+        this.id = code; //Guarda el valor que recibimos
         setDescription(description);
     }
 
@@ -63,7 +63,7 @@ public class DocumentType implements Identifiable<String> {
 
     @Override
     public int hashCode () {
-        return id.hascode();
+        return id.hashCode();
     }
 
     @Override
