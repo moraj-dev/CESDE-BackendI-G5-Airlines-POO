@@ -5,7 +5,7 @@ import com.airlinespoo.core.util.Validator;
 
 public class Country implements Identifiable<Integer>{ //Se implementa la interfaz
 
-    private int id; //Atributos
+    private final int id; //Atributos
     private String name;
     private static final int MAX_LENGTH_NAME =20;
     //Constante donde se define el maximo de letras del nombre del país
@@ -54,6 +54,12 @@ public class Country implements Identifiable<Integer>{ //Se implementa la interf
     @Override
     public int hashCode() {
         return Integer.hashCode(id);
+    }
+
+    //Muestra el id y el nombre del país
+    @Override
+    public String toString() {
+        return "Country{id=" + id + ", name='" + name + "'}";
     }
 }
 
