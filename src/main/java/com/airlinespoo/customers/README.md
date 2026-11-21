@@ -22,9 +22,6 @@ general del proyecto lo mantiene el Módulo 3.
 | `repository` | `DocumentTypeRepository` | CRUD en memoria de tipos de documento (hereda del kit). |
 | `repository` | `CustomerRepository` | Interfaz: el CRUD del kit más las búsquedas de clientes (por correo, apellido, país y tipo). |
 | `repository` | `InMemoryCustomerRepository` | Implementación en memoria de `CustomerRepository`. |
-| `repository` | `JdbcDatabaseConnection` | Abre la conexión JDBC a SQL Server (URL, usuario y contraseña). |
-| `repository` | `JdbcCountryRepository`, `JdbcDocumentTypeRepository` | CRUD con JDBC de países y tipos de documento; cumplen el contrato `Repository` del kit. |
-| `repository` | `JdbcCustomerRepository` | Implementación con JDBC de `CustomerRepository`; arma cada cliente con un `INNER JOIN`. |
 | `service` | `CustomerService` | Reglas de negocio de las tres entidades; equivale a `uspCrearClientes` con las reglas de la guía. |
 | `service` | `CountryNameComparator`, `CustomerNameComparator` | Orden de los listados: países por nombre; clientes por apellido y luego nombre. |
 | `ui` | `CustomerMenu` | Menú del módulo: registrar, consultar, actualizar contacto, listar, buscar, eliminar, catálogos, volver. |
@@ -114,7 +111,7 @@ teléfono, correo ni dirección.
 7. **El servicio depende de interfaces.** Para países y tipos de documento basta el contrato
    `Repository` del kit; para clientes se definió `CustomerRepository` (contrato con las
    búsquedas propias) y `InMemoryCustomerRepository` (implementación), igual que el kit separa
-   `Repository` de `InMemoryRepository`. Por eso se pudo agregar JDBC sin tocar el servicio.
+   `Repository` de `InMemoryRepository`. Así el servicio no depende de la clase en memoria.
 8. **Sin `IdGenerator`.** Ningún id del módulo es autogenerado.
 9. **Un solo menú.** La guía pide una opción por módulo en el menú principal; los catálogos son un
    submenú dentro de `CustomerMenu`, necesario para ejecutar a mano los casos 1 a 3.
@@ -149,69 +146,8 @@ Menu customerMenu = new CustomerMenu(customerService, input);   // va en la list
 customerMenu.run();
 ```
 
-Para probar a mano se puede pegar ese bloque temporalmente en `Main.main`, sin hacer commit de
-`Main.java` (pertenece al Módulo 3).
-
-## Persistencia con JDBC
-
-Sigue la lección y el taller de JDBC del curso: `DriverManager`, `Connection`,
-`PreparedStatement`, `ResultSet`, `try` con recursos e `INNER JOIN`. Solo cambió la capa de
-repositorios; el modelo, el servicio y el menú son los mismos.
-
-El motor es **SQL Server**, el del script de tablas del docente (`aerolines-poo_sqlserver.sql`).
-Los nombres de tabla y de columna que usa el código son los de ese script.
-
-**1. Crear la base de datos.** En SSMS, con una consulta nueva:
-
-```sql
-CREATE DATABASE airlinesdb;
-```
-
-**2. Crear las tablas con el script del docente.** Abrir `aerolines-poo_sqlserver.sql`, elegir
-`airlinesdb` en la lista de bases de datos (arriba a la izquierda) y ejecutar con F5. El script no
-elige la base de datos por sí mismo.
-
-**3. Cargar los datos de ejemplo del módulo.** Ejecutar [`sql/sqlserver.sql`](sql/sqlserver.sql)
-en esa misma base de datos. No crea tablas: solo inserta los 5 países, los 4 tipos de documento y
-los 3 clientes, y solo si las tablas están vacías.
-
-**4. Poner la contraseña en `JdbcDatabaseConnection`.** La del usuario `sa` del servidor local. La
-URL es la de la lección de JDBC: `localhost:1433`, `encrypt=false` y `trustServerCertificate=true`.
-
-**5. Arrancar con los repositorios JDBC.** Es el mismo bloque de arriba con otros repositorios.
-No se llama a `CustomerSampleData.load`: los datos de ejemplo ya son filas de la base de datos y
-cargarlos otra vez daría "ya existe".
-
-```java
-ConsoleInput input = new ConsoleInput();
-CustomerService customerService = new CustomerService(
-        new JdbcCountryRepository(), new JdbcDocumentTypeRepository(), new JdbcCustomerRepository());
-Menu customerMenu = new CustomerMenu(customerService, input);
-customerMenu.run();
-```
-
-### Decisiones de la capa JDBC
-
-12. **Tablas y columnas del script del docente**: `tblCountries (CountryId, Name)`,
-    `tblDocumentsType (TypeId, Description)` y `tblCustomers (customerId, FirtName, Lastname,
-    TypeId, TelephoneNumber, Email, CountryId, Address)`. El módulo no crea tablas; solo aporta
-    sus datos de ejemplo. `FirtName` conserva el error del esquema y en Java es `firstName`, como
-    pide la guía (sección 5).
-13. **Los ids no son autogenerados**: en el script del docente estas tres tablas no usan
-    `IDENTITY`. El taller sí los autogenera porque sus tablas son distintas.
-14. **Sin `ON DELETE CASCADE`**, igual que el script del docente. La clave foránea impide borrar un
-    país o un tipo de documento en uso; el servicio lo rechaza antes con un mensaje claro.
-15. **Los repositorios no imprimen.** Un `SQLException` se convierte en `AirlinesException`
-    ("Error de base de datos: …") y el menú la muestra sin cerrarse, igual que las demás.
-16. **Mismo contrato del kit.** `create` lanza `DuplicateException` si el id ya existe, `update`
-    lanza `NotFoundException` si no modificó ninguna fila y `findById` devuelve `Optional`.
-17. **Correo único.** El script del docente define `UNIQUE (Email)`. En SQL Server esa restricción
-    admite un solo `NULL`: con ese esquema solo un cliente puede quedar sin correo, y el segundo
-    recibe "Error de base de datos". No se cambió el esquema del docente.
-18. **Una conexión por operación**, como en el taller. Es lo más sencillo para este tamaño.
-
-El código compila y las consultas usan los nombres del script del docente. Falta ejecutarlo contra
-SQL Server.
+Ese bloque está en `Main.main` para poder ejecutar el módulo mientras el Módulo 3 entrega el
+`Main` definitivo.
 
 ## Casos de prueba de la guía (ejecutados a mano por el menú)
 
