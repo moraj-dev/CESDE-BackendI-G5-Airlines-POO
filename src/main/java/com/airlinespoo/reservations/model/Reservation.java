@@ -3,6 +3,7 @@ package com.airlinespoo.reservations.model;
 import com.airlinespoo.core.exception.ValidationException;
 import com.airlinespoo.core.model.Identifiable;
 import com.airlinespoo.core.util.Validator;
+import com.airlinespoo.customers.model.Customer;
 
 import java.util.ArrayList;
 import java.util.List;
