@@ -24,5 +24,12 @@ public final class Main {
         System.out.println("Proyecto base listo. El kit base (paquete core) está disponible.");
         System.out.println("Cada módulo se integra en develop mediante Pull Request.");
         // TODO (Módulo 3): ensamblar aquí lector, generadores, repositorios, servicios y menús.
+
+                // --- Módulo 1 en memoria ---
+//         Para usarlo: comentar las 3 líneas de arriba y quitar el comentario de estas 4.
+         CustomerService customerService = new CustomerService(
+             new CountryRepository(), new DocumentTypeRepository(),
+             new InMemoryCustomerRepository());
+         CustomerSampleData.load(customerService);
     }
 }
